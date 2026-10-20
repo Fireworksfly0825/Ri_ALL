@@ -1,0 +1,23 @@
+[Unit]
+Description=DJI PSDK sample (dji_sdk_demo_on_rpi_cxx) kept alive in a screen session
+Documentation=file:/home/rsp/dji/psdk/start/psdk-run.sh
+After=raspigadget.service
+Wants=raspigadget.service
+
+[Service]
+Type=simple
+User=rsp
+Group=rsp
+Environment=HOME=/home/rsp
+Environment=TERM=linux
+WorkingDirectory=/home/rsp/dji/psdk/current/build/bin
+ExecStart=/home/rsp/dji/psdk/start/psdk-run.sh
+ExecStop=/home/rsp/dji/psdk/start/psdk-stop.sh
+Restart=always
+RestartSec=15
+TimeoutStopSec=20
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

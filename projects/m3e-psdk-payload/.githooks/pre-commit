@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# 提交前拦截：开发者凭据泄露。
+#
+# 背景：dji_sdk_app_info.h 里有真实的 USER_APP_KEY / USER_APP_LICENSE / 开发者邮箱。
+# 仓库里只应存在占位符化的 dji_sdk_app_info.h.template。
+# 这里做最后一道防线 —— 只要暂存区里出现非占位符的值，直接拒绝提交。
+
+set -u
+
+fail=0
+
+# --- 1. 值不能是非占位符 ------------------------------------------------------
+# 匹配形如  USER_APP_KEY "xxxxx"  且 xxxxx 不是 YOUR_*
+#
+# 注意：USER_APP_NAME / USER_APP_ID 不在此列。App ID 是标识符不是密钥，
+# 不能用来认证，且已硬编码在编译产物里；模板里保留真实值便于重装时知道
+# 该用哪个 app 去取 key。真正的密钥只有 APP_KEY / APP_LICENSE / DEVELOPER_ACCOUNT。
+# 必须锚定到 `#define`，否则连本文件里的注释和说明文字都会被自己匹配上。
+pattern='^\+[[:space:]]*#[[:space:]]*define[[:space:]]+USER_(APP_KEY|APP_LICENSE|DEVELOPER_ACCOUNT)[[:space:]]+"[^"]+"'
+
+while IFS= read -r line; do
+    # 取出引号里的值
+    value=$(printf '%s' "$line" | sed -n 's/.*"\([^"]*\)".*/\1/p')
+    case "$value" in
+        YOUR_*|"") continue ;;   # 占位符，放行
+    esac
+    echo "pre-commit: 拒绝提交 —— 检测到疑似真实凭据：" >&2
+    echo "    $line" >&2
+    fail=1
+done < <(git diff --cached --unified=0 -- . | grep -E "$pattern")
+
+# --- 2. 真实文件本身不能被跟踪 ------------------------------------------------
+if git diff --cached --name-only | grep -qE '(^|/)dji_sdk_app_info\.h$'; then
+    echo "pre-commit: 拒绝提交 —— dji_sdk_app_info.h 是含凭据的真实文件，不能入库。" >&2
+    echo "    请改用 dji_sdk_app_info.h.template。" >&2
+    fail=1
+fi
+
+if [ "$fail" -ne 0 ]; then
+    echo "" >&2
+    echo "若确属误报，可临时绕过：git commit --no-verify" >&2
+    echo "但请先确认这个值真的不是凭据。" >&2
+    exit 1
+fi
+
+exit 0

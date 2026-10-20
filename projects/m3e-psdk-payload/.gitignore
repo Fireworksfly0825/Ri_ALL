@@ -1,0 +1,21 @@
+# 真实凭据文件 —— 绝不允许出现（仓库里只有对应的 .template）
+dji_sdk_app_info.h
+
+# 编译产物 / 日志
+build/
+Logs/
+*.o
+*.a
+*.so
+*.log
+
+# 手工备份与临时文件
+*.bak
+*.bak-*
+*.orig
+*.rej
+*~
+.DS_Store
+
+# 相机模拟器工作副本（7.9MB 数据文件，非源码）
+out.h264
