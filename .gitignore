@@ -1,0 +1,51 @@
+# ========== 工具/IDE 缓存，可随时重建 ==========
+.vscode-server/
+.cursor-server/
+.cursor/
+.copilot/
+.cache/
+.npm/
+.nvm/
+.dotnet/
+.pki/
+.dbus/
+.claude/
+.claude.json
+
+# ========== 大体积、可重新下载 ==========
+opencv/
+dji/
+Bookshelf/
+
+# ========== .local 里是 pip/npm 等安装产物（319M） ==========
+Settings/.local/
+
+# ========== 配置目录里的缓存与登录态 ==========
+Settings/.config/chromium/
+Settings/.config/pulse/
+Settings/.config/dconf/
+Settings/.cache/
+Settings/.vim/tmp/
+
+# ========== 敏感信息：绝不入库 ==========
+Settings/.ssh/id_*
+Settings/.ssh/authorized_keys
+.bash_history
+Settings/.bash_history
+.Xauthority
+*.pem
+*.key
+*.keystore
+*.jks
+.netrc
+.npmrc
+.git-credentials
+*token*
+*credential*
+
+# ========== 杂项 ==========
+*.log
+.xsession-errors*
+.wget-hsts
+.viminfo*
+.unite/

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# for root
+#     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[00m\]@\[\033[01;33m\]\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]
+# \$ '
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]@\[\033[01;34m\]\h\[\033[00m\]: \[\033[01;36m\]\w\[\033[00m\]
+\$ '
+
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+alias ll='ls -alhF'
+alias abc='adb connect 192.168.10.100:5556'
+alias ads='adb -s ${ADB_DEVICE}'
+# export LIBGL_ALWAYS_SOFTWARE=1
+# source /opt/ros2/install/setup.bash
+
+username=`whoami`
